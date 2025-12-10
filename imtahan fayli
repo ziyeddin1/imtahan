@@ -1,0 +1,93 @@
+import tkinter as tk
+from tkinter import messagebox
+
+elanlar = {}
+
+def elan_yarat():
+    win = tk.Toplevel(root)
+    win.title("Turbo.az - Elan Yarat")
+    win.geometry("350x300")
+
+    tk.Label(win, text="Maşının adı").pack(pady=5)
+    ent_ad = tk.Entry(win)
+    ent_ad.pack()
+
+    tk.Label(win, text="İli").pack(pady=5)
+    ent_ili = tk.Entry(win)
+    ent_ili.pack()
+
+    tk.Label(win, text="Telefon nömrəsi").pack(pady=5)
+    ent_nomre = tk.Entry(win)
+    ent_nomre.pack()
+
+    tk.Label(win, text="Maşının  nömrəsi").pack(pady=5)
+    ent_m_nomre = tk.Entry(win)
+    ent_m_nomre.pack()
+
+    tk.Label(win, text="Qiyməti").pack(pady=5)
+    ent_qiymet = tk.Entry(win)
+    ent_qiymet.pack()
+
+    def save_elan():
+        ad = ent_ad.get()
+        ili = ent_ili.get()
+        nomre = ent_nomre.get()
+        m_nomre = ent_m_nomre.get()
+        qiymet = ent_qiymet.get()
+
+        if not ad:
+            messagebox.showerror("Xəta", "Maşının adı boş ola bilməz!")
+            return
+        if not ili.isdigit():
+            messagebox.showerror("Xəta", "İl yalnız rəqəm olmalıdır!")
+            return
+        if not nomre.isdigit():
+            messagebox.showerror("Xəta", "Telefon nömrəsi yalnız rəqəm olmalıdır!")
+            return
+        if not qiymet.isdigit():
+            messagebox.showerror("Xəta", "Qiymət yalnız rəqəm olmalıdır!")
+            return
+
+        elanlar[m_nomre] = {
+            "ad": ad,
+            "ili": ili,
+            "nomre": nomre,
+            "masin_nomresi": m_nomre,
+            "qiymet": qiymet
+        }
+
+        messagebox.showinfo("OK", "Elan əlavə edildi!")
+        win.destroy()
+
+    tk.Button(win, text="Elanı əlavə et", bg="green", fg="white",
+              command=save_elan).pack(pady=15)
+
+
+def elanlara_bax():
+    win = tk.Toplevel(root)
+    win.title("Turbo.az - Bütün Elanlar")
+    win.geometry("400x300")
+
+    if not elanlar:
+        tk.Label(win, text="Hələ heç bir elan yoxdur!").pack(pady=20)
+        return
+
+    for key, elan in elanlar.items():
+        tk.Label(
+            win,
+            text=f"{elan['ad']} | {elan['ili']} | {elan['qiymet']} AZN | {elan['masin_nomresi']}",
+            font=("Arial", 11)
+        ).pack(pady=5)
+
+
+root = tk.Tk()
+root.title("Turbo.az Mini Sistem")
+root.geometry("400x250")
+
+tk.Button(root, text="Yeni Elan Yarat", bg="blue", fg="white",
+          command=elan_yarat, width=20).pack(pady=20)
+
+tk.Button(root, text="Elanlara Bax", bg="orange", fg="white",
+          command=elanlara_bax, width=20).pack(pady=10)
+
+root.mainloop()
